@@ -1,0 +1,124 @@
+{
+  "name": "test_dir", 
+  "_node_index": 0, 
+  "_node_type": 0, 
+  "depth": 0, 
+  "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir", 
+  "children": {
+    "A": {
+      "name": "A", 
+      "_node_index": 1, 
+      "_node_type": 0, 
+      "depth": 1, 
+      "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A", 
+      "children": {
+        "snakefoot副本.py": {
+          "name": "snakefoot副本.py", 
+          "_node_type": 1, 
+          "depth": 2, 
+          "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/snakefoot副本.py", 
+          "_node_index": 7, 
+          "size": 2602
+        }, 
+        "B": {
+          "name": "B", 
+          "_node_index": 4, 
+          "_node_type": 0, 
+          "depth": 2, 
+          "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B", 
+          "children": {
+            "C": {
+              "name": "C", 
+              "_node_index": 8, 
+              "_node_type": 0, 
+              "depth": 3, 
+              "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/C", 
+              "children": {
+                "D": {
+                  "name": "D", 
+                  "_node_index": 10, 
+                  "_node_type": 0, 
+                  "depth": 4, 
+                  "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/C/D", 
+                  "children": {
+                    "E": {
+                      "name": "E", 
+                      "_node_index": 12, 
+                      "_node_type": 0, 
+                      "depth": 5, 
+                      "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/C/D/E", 
+                      "children": {}, 
+                      "size": 102
+                    }, 
+                    "snakefoot.py": {
+                      "name": "snakefoot.py", 
+                      "_node_type": 1, 
+                      "depth": 5, 
+                      "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/C/D/snakefoot.py", 
+                      "_node_index": 13, 
+                      "size": 2602
+                    }
+                  }, 
+                  "size": 136
+                }, 
+                "snakefoot.py": {
+                  "name": "snakefoot.py", 
+                  "_node_type": 1, 
+                  "depth": 4, 
+                  "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/C/snakefoot.py", 
+                  "_node_index": 11, 
+                  "size": 2602
+                }
+              }, 
+              "size": 136
+            }, 
+            "snakefoot.py": {
+              "name": "snakefoot.py", 
+              "_node_type": 1, 
+              "depth": 3, 
+              "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B/snakefoot.py", 
+              "_node_index": 9, 
+              "size": 2602
+            }
+          }, 
+          "size": 136
+        }, 
+        "B副本": {
+          "name": "B副本", 
+          "_node_index": 5, 
+          "_node_type": 0, 
+          "depth": 2, 
+          "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/B副本", 
+          "children": {}, 
+          "size": 68
+        }, 
+        ".DS_Store": {
+          "name": ".DS_Store", 
+          "_node_type": 1, 
+          "depth": 2, 
+          "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/.DS_Store", 
+          "_node_index": 3, 
+          "size": 6148
+        }, 
+        "snakefoot.py": {
+          "name": "snakefoot.py", 
+          "_node_type": 1, 
+          "depth": 2, 
+          "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/A/snakefoot.py", 
+          "_node_index": 6, 
+          "size": 2602
+        }
+      }, 
+      "size": 238
+    }, 
+    "snakefoot.py": {
+      "name": "snakefoot.py", 
+      "_node_type": 1, 
+      "depth": 1, 
+      "path": "/Users/aaronyin/AaronYinProject/DiskSpider_Demo/test_dir/snakefoot.py", 
+      "_node_index": 2, 
+      "size": 2602
+    }
+  }, 
+  "size": 136
+}

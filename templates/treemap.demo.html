@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <script type="text/javascript" src="/static/js/d3.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
+<script src="/static/data/data.json"></script>
+    <style type="text/css">
+
+.chart {
+  display: block;
+  margin: auto;
+  margin-top: 2px;
+}
+
+.header {
+    display: block;
+    margin :auto;
+    
+}
+.header_cell{
+    margin-right: 3px;
+}
+
+.cell_rect{
+    border-top-width: 150px;
+  border-right-width: 5px;
+  border-bottom-width: 15px;
+  border-left-width: 5px;
+}
+
+text {
+  font-size: 11px;
+}
+
+rect {
+  fill: none;
+  
+}
+
+
+    </style>
+  </head>
+  <body>
+    <div id="body">
+      <div>
+        <span style="font-size:20px">all js code in html src</span>
+      </div>
+      <!-- <div id="footer">
+        <div><select>
+          <option value="size">Size</option>
+          <option value="count">Count</option>
+        </select></div>
+      </div> -->
+    </div>
+    <script type="text/javascript">
+
+
+var TreeMapOP = {
+  get_node_size: function (obj) {
+    return obj.Size
+  },
+  get_node_name: function (obj) {
+    return obj.Name
+  },
+}
+
+function draw(data) {
+    var root = data;
+    cur_display_child_node=null
+    cur_display_cells=null
+  // find those who doesnt have children, 
+  
+    nodes = treemap.nodes(root)
+    var cell = svg.selectAll("g")
+      .data(nodes)
+    .enter().append("svg:g")
+      .attr("class", "cell")
+      .attr("id", )
+      .attr("parent_name",function(d) { return d.parent ? d.parent.Name : d.Name ; })
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; }) // ?
+
+  cell.append("svg:rect")
+        .attr("class","cell_rect")
+      .attr("width", function(d) { return d.dx - 1; })
+      .attr("height", function(d) { return d.dy - 1; })
+
+  cell.append("svg:text")
+      .attr("x", function(d) { return d.dx / 2; })
+      .attr("y", function(d) { return d.dy /2; })
+      //.attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      //.text("")
+      .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
+
+  //d3.select(window).on("click", function() { zoom_in(root); });
+  display(root);
+
+  // it is for ratio button 
+  d3.select("select").on("change", function() {
+    treemap.value(this.value == "size" ? size : count).nodes(root);
+    zoom_in(root);
+  });
+}
+
+function nodes_filter(name){
+    for (var i=0;i<nodes.length;i++){
+        n=nodes[i]
+        if (n.Name == Name){return n}
+    }
+}
+
+function new_rect_size (w, h) {
+  return {width: w, height:h}
+}
+
+function TreeMapView_C (data) {
+
+  /*
+  node as data unit,
+  cell as view unit,
+  */
+
+  var data_op_obj = {
+    get_node_size: function (node) {
+      return node.size
+    },
+    get_node_name: function (node) {
+      return node.name
+    },
+  }
+  
+  var treemap_view_obj = {
+
+    init: function () {
+      var frame_size = new_rect_size(1380 - 80, 728 - 180)
+      slr_x = d3.scale.linear().range([0, frame_size.width]),
+      slr_y = d3.scale.linear().range([0, frame_size.height]),
+      color_category = d3.scale.category20c();
+
+      // gen d3_treemap, as the algorithm to gen rect of each cell
+      var treemap_layout = d3.layout.treemap()
+        .round(true)
+        .size([frame_size.width, frame_size.height])
+        .sticky(true)
+        .value(data_op_obj.get_node_size)
+
+      // this svg is for displaying treemap
+      var treemap_svg = d3.select("#body")
+        .append("div").attr("class", "chart").attr("id","main")
+        .style(new_rect_size(frame_size.width+"px", frame_size.height+"px"))
+        .append("svg:svg").attr("width", frame_size.width).attr("height", frame_size.height)
+        .append("svg:g").attr("transform", "translate(.5,.5)"); // main canvas
+
+    },
+
+    init_header_bar: function () {
+      var frame_size = self.frame_size
+
+      var header_bar_size = new_rect_size(frame_size.width, 40)
+      var header_bar = d3.select("#body")
+        .append("div").attr("class", "header_bar").attr("id","main_header")
+        .style(new_rect_size(header_bar_size.width+"px", header_bar_size.height+"px"))
+        .append("svg:svg").attr("width", header_bar_size.width).attr("height", header_bar_size.height)
+        .append("svg:g").attr("transform", "translate(.5,.5)").attr("id","header_g")
+        .append("svg:g").attr("id","header_g_canvas")
+
+      var header_node_array = [];
+    },
+
+    init_treemap: function () {
+      var root_node = self.root_node
+      var treemap_layout = self.treemap_layout,
+          treemap_svg = self.treemap_svg
+
+      cur_display_child_node=null
+      cur_display_cells=null
+      // find those who doesnt have children, 
+    
+      // treemap_nodes is for displaying, and it is still data model
+      var treemap_nodes = treemap_layout.nodes(root_node)
+
+      
+      // init svg for all cell
+      {
+      // svg will draw cell
+      var cell = treemap_svg.selectAll("g")
+        .data(treemap_nodes)
+        .enter().append("svg:g")
+        .attr("class", "cell")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+        // .attr("id", )
+        // .attr("parent_name",function(d) { return d.parent ? d.parent.Name : d.Name ; })
+
+      // rect of cell 
+      cell.append("svg:rect")
+        .attr("class","cell_rect")
+        .attr("width", function(d) { return d.dx - 1; })
+        .attr("height", function(d) { return d.dy - 1; })
+
+      // label of cell
+      cell.append("svg:text")
+        .attr("x", function(d) { return d.dx / 2; })
+        .attr("y", function(d) { return d.dy /2; })
+        //.attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        //.text("")
+        .style("opacity", function(d) { d.w = this.getComputedTextLength(); return d.dx > d.w ? 1 : 0; });
+      }
+      
+    },
+
+    draw_cur_depth_treemap: function (node) {
+      var root_node = self.root_node,
+          treemap_svg = self.treemap_svg
+          header_node_array = self.header_node_array
+
+      var cur_parent_name = root_node.name
+          parent_node = node
+
+      // init each cell, on top
+      {
+        // bind zoom_in event to top cells 
+        var cells = treemap_svg.selectAll("g.cell")
+        .filter(function (d) { return d.parent && d.parent.name==cur_parent_name })
+        .on("click", function(d) {   zoom_in(d); })
+        //.on("mouseenter",function(d) {display_child(d)})
+
+        // paint color of cell
+        cells.select("rect")
+          .style("fill", function(d) { return color_category(d.name)  })
+          .style("stroke-width","1")
+          .style("stroke","white")
+
+        // display label of cell
+        cells.select("text")
+          .text(function(d) { return d.name })
+      }
+
+      // hide child cells background, this is critical for layer-style, but not important if you need to show child too
+      {
+        var child_cells = svg.selectAll("g.cell")
+          .filter(function (d) { return d.depth>parent_node.depth+1 })
+
+        child_cells.select("rect").style("fill", function(d) { return })
+          .style("stroke-width","")
+          .style("stroke","")
+        
+        child_cells.select("text")
+          .text(function(d) { return })
+      }
+      
+      // update display of header
+      {
+        var temp_node = parent_node
+        while(true){
+          header_node_array.push(temp_node)
+          if (temp_node.parent) {temp_node = temp_node.parent}
+          else {break}
+        }
+        header_node_array=header_node_array.reverse()
+        header_cell_w=header_w/header_node_array.length
+        
+        d3.selectAll("#header_g_canvas").remove() // clean up old header_g
+        var header_g_canvas=d3.selectAll('#header_g')
+        .append("svg:g").attr("id","header_g_canvas") // header canvas
+        
+        for (var i=0; i<header_node_array.length;i++) {
+          var hnode=header_node_array[i],xx=header_cell_w*i,yy=0.5
+          
+          var g_canvas=header_g_canvas.append("svg:g").attr("class","header_cell").attr("transform","translate("+xx+","+yy+")")
+          g_canvas.append("svg:rect").attr("width",header_cell_w).attr("height",header_h).style("fill","#907823")
+          
+          header_g_canvas.append("svg:text").attr("text-anchor", "middle")
+          .attr("x",(xx+xx+header_cell_w)/2).attr("y", header_h /2).text(hnode.name)
+          g_canvas.datum(hnode)
+          g_canvas.on("click",function (d){ zoom_in(nodes_filter(d.name)) }) 
+        }
+      }
+
+
+    },
+
+
+  }
+
+  return treemap_view_obj
+}
+
+function display(node) {
+    if (!node) {return}
+    
+    cur_parent_name=node.Name;
+    cur_node=node;
+
+    
+
+  
+}
+
+function zoom_in(node) {
+  //if (!node.children) {return}
+  
+  var kx = w / node.dx, ky = h / node.dy;
+  x.domain([node.x, node.x + node.dx]);
+  y.domain([node.y, node.y + node.dy]);
+
+    
+     //print("zoom")
+  var t = svg.selectAll("g.cell").transition()
+      .duration(750)
+      .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+    //print("fuck")
+  t.select("rect")
+      .attr("width", function(d) { return kx * d.dx - 1; })
+      .attr("height", function(d) { return ky * d.dy - 1; })
+
+  t.select("text")
+      .attr("x", function(d) { return kx * d.dx / 2; })
+      .attr("y", function(d) { return ky * d.dy / 2; })
+      .style("opacity", function(d) { return kx * d.dx > d.w ? 1 : 0; });
+      
+  try{ d3.event.stopPropagation(); }
+  catch(err){ print(err) }
+  
+  display(node);
+}
+
+function A(){
+    cluster_node=cur_node;
+}
+function B(){
+    zoom_in(cluster_node)
+}
+
+function zoom_out(node){
+    if (!node.parent) {return}
+    
+    
+}
+
+
+////////////////////////    underlying
+
+function undisplay_action() {
+    if (!cur_cells) { return }
+    cur_undisplay_cells=cur_cells
+    cur_undisplay_cells.on("click", function(d) { return })
+    .on("mouseenter",function(d) {return})
+    print("action")
+}
+
+function undisplay_view() {
+    cur_undisplay_cells.select("rect").style("fill", function(d) { return });
+    cur_undisplay_cells.select("text").text(function(d) { return })
+    cur_undisplay_cells=null
+    print("view")
+}
+
+function display_child(node) {
+    if (node==null) {return}
+    if (cur_display_child_node==null) // init 
+        {cur_display_child_node=node} 
+    else if (cur_display_child_node.name!=node.name) // move to a new node
+    {
+        undisplay_child(cur_display_child_node) // back to original view
+        cur_display_child_node=node // 
+    }
+    else if (cur_display_child_node.name==node.name) { return } // still inside
+    //print ("display_child")
+    
+  if (!node.children) { cur_display_cells=null; return; }
+  
+  var cells = svg.selectAll("g.cell")
+  .filter(function (d) { return d.parent && d.parent.name==cur_display_child_node.name })
+  
+  cur_display_cells=cells
+  
+  cells.select("rect").style("fill", function(d) { return color(d.name)  });
+  cells.select("text").text(function(d) { return d.name })
+  cells.on("click", function(d) { return undisplay_child(); zoom(d.parent); })
+    
+}
+
+function undisplay_child(node){
+    //print ("undisplay_child")
+    
+  if (cur_display_cells==null) { return }
+    var cells = cur_display_cells
+  cells.select("rect").style("fill", function(d) { return ""  });
+  cells.select("text").text(function(d) { return "" })
+  cells.on("click", function(d) { return })
+  
+  cur_display_cells=null
+  
+}
+
+function size(d) {
+  return d.size;
+}
+
+function count(d) {
+  return 1;
+}
+
+function nodes_filter_parent(d){
+    return d.parent && d.parent.name == cur_parent_name;
+}
+
+
+draw(dataset);
+
+    </script>
+  </body>
+</html>
+
+
